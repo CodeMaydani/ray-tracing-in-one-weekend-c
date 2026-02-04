@@ -1,4 +1,6 @@
+#include "color.h"
 #include <stdio.h>
+
 int main(void)
 {
   // image
@@ -19,11 +21,9 @@ int main(void)
       double g = (double)j / (image_height - 1);
       double b = 0.0;
 
-      int ir = (int)(255.999 * r);
-      int ig = (int)(255.999 * g);
-      int ib = (int)(255.999 * b);
+      color color = {r, g, b};
 
-      fprintf(f, "%d %d %d\n", ir, ig, ib);
+      write_color(f, color);
     }
   }
   printf("\r\033[2KDone.\n");
