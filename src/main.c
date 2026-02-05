@@ -4,8 +4,20 @@
 #include "vec3.h"
 #include <stdio.h>
 
+int hit_sphere(point3 center, double radius, ray r)
+{
+	// vector from camera to the center of the sphere
+  vec3 oc = vec3_sub(center, r.origin);
+  double a = vec3_dot(r.direction, r.direction);
+  double b = -2.0 * vec3_dot(r.direction, oc);
+  double c = vec3_dot(oc, oc) - radius * radius;
+  double discriminant = b * b - 4 * a * c;
+  return (discriminant >= 0);
+}
 color ray_color(ray r)
 {
+  if (hit_sphere(point3_create(0,0,-1), 0.3, r))
+         return color_create(1, 0, 0);
 
   vec3 unit_direction = vec3_unit(r.direction);
   double a = 0.5 * (unit_direction.y + 1.0);
@@ -51,7 +63,7 @@ int main(void)
       vec3_sub(vec3_sub(camera_center, vec3_create(0, 0, focal_length)),
                vec3_div(viewport_u, 2)),
       vec3_div(viewport_v, 2));
-	// Center of pixel 0,0
+  // Center of pixel 0,0
   point3 pixel00_loc =
       vec3_add(viewport_upper_left,
                vec3_mul(vec3_add(pixel_delta_u, pixel_delta_v), 0.5));
@@ -80,5 +92,6 @@ int main(void)
   }
   printf("\r\033[2KDone.\n");
   fflush(stdout);
-	printf("%f %f %f\n", viewport_upper_left.x, viewport_upper_left.y, viewport_upper_left.z);
+  printf("%f %f %f\n", viewport_upper_left.x, viewport_upper_left.y,
+         viewport_upper_left.z);
 }
